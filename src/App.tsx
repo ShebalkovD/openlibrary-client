@@ -1,5 +1,6 @@
 import { Stack, Typography } from "@mui/material";
 import { BookList } from "./components/BookList.tsx";
+import { SearchField } from "./components/SearchField.tsx";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
       >
         Openlibrary поиск
       </Typography>
+      <SearchField />
       <BookList />
     </Stack>
   );
