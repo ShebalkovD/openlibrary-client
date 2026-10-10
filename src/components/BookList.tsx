@@ -13,7 +13,7 @@ export const BookList: FC = () => {
   );
   const books = isSuccess && data && search ? data.docs : [];
 
-  if (isLoading) return <CircularProgress />;
+  if (isLoading) return <CircularProgress size={18} sx={{ mt: 4 }} />;
 
   return (
     <Box sx={{ mt: 4 }}>

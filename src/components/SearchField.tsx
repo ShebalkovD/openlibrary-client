@@ -5,8 +5,8 @@ import { useSearchParams } from "react-router";
 import { useDebounce } from "../shared/useDebounce.ts";
 
 export const SearchField: FC = () => {
-  const [, setParams] = useSearchParams();
-  const [value, setValue] = useState("");
+  const [params, setParams] = useSearchParams();
+  const [value, setValue] = useState(params.get("search") ?? "");
   const debounced = useDebounce(value);
   const isStable = value === debounced;
 
@@ -17,13 +17,7 @@ export const SearchField: FC = () => {
 
   useEffect(() => {
     if (!isStable) return;
-
-    if (!debounced) {
-      setParams((prev) => {
-        prev.delete("search");
-        return prev;
-      });
-    }
+    if (!debounced) return;
 
     setParams((prev) => {
       prev.set("search", debounced);
