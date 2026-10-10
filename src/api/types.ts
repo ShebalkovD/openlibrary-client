@@ -1,4 +1,5 @@
 export type Book = {
+  key: string; // pk
   title: string;
   series_name: string[];
   author_name: string[];

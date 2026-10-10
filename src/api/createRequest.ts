@@ -5,6 +5,7 @@ type Params = {
   url: string;
   query?: Record<string, string>;
   queryKey: string;
+  enabled?: boolean;
 };
 
 export type Query<TData> = {
@@ -36,14 +37,17 @@ export const useCreateRequest = <TData>({
   url,
   query,
   queryKey,
+  enabled = true,
 }: Params): Query<TData | undefined> => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(enabled);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [data, setData] = useState<TData | undefined>(undefined);
 
   useEffect(() => {
+    if (!enabled) return;
+
     const search = new URLSearchParams(query).toString();
     const fullUrl = search ? `${url}?${search}` : url;
     const fullKey = [queryKey, query ? JSON.stringify(query) : ""].join(",");
@@ -89,7 +93,7 @@ export const useCreateRequest = <TData>({
 
     // cleanup: отменяем запрос при размонтировании / смене url
     return () => controller.abort();
-  }, [query, queryKey, url]);
+  }, [query, queryKey, url, enabled]);
 
   return {
     isLoading,
