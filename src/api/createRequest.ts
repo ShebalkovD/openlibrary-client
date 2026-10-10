@@ -7,12 +7,12 @@ type Params = {
   queryKey: string;
 };
 
-type Query = {
+export type Query<TData> = {
   isLoading: boolean;
   isError: boolean;
   isSuccess: boolean;
   errorMessage: string;
-  data: unknown;
+  data: TData;
 };
 
 const HEADERS = new Headers({
@@ -32,12 +32,16 @@ const writeCache = (queryKey: string, value: unknown): void => {
   REQUEST_CACHE.set(queryKey, value);
 };
 
-export const useCreateRequest = ({ url, query, queryKey }: Params): Query => {
+export const useCreateRequest = <TData>({
+  url,
+  query,
+  queryKey,
+}: Params): Query<TData | undefined> => {
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
-  const [data, setData] = useState<unknown>(undefined);
+  const [data, setData] = useState<TData | undefined>(undefined);
 
   useEffect(() => {
     const search = new URLSearchParams(query).toString();
@@ -52,7 +56,7 @@ export const useCreateRequest = ({ url, query, queryKey }: Params): Query => {
       setIsError(false);
       setIsSuccess(true);
       setErrorMessage("");
-      setData(getCache(fullKey));
+      setData(getCache(fullKey) as TData);
       return;
     }
 
